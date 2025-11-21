@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "protocol.h"
 
 #define NO_ERROR 0
@@ -105,7 +106,7 @@ int main(int argc, char *argv[]) {
 	for(int i = 1; i < argc; ++i) {
 
 		//Gestione Server (-s)
-		if(strcm(argv[i], "-s") == 0) {
+		if(strcmp(argv[i], "-s") == 0) {
 			if(i + 1 < argc) {
 				server_address = argv[++i];
 				continue;
@@ -180,12 +181,12 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_in server_sockaddr;	//struttura per indirizzo IPv4
 	memset(&server_sockaddr, 0, sizeof(server_sockaddr));
 	server_sockaddr.sin_family = AF_INET;
-	server_sockaddr.sin_addr = inet_addr(server_address); //converte un numero in notazione puntata in un numero a 32 bit
+	server_sockaddr.sin_addr.s_addr = inet_addr(server_address); //converte un numero in notazione puntata in un numero a 32 bit
 	server_sockaddr.sin_port = htons(server_port_num);	//converte le porte in formato Big-Endian
 
 	//connessione al server
 	if (connect(my_socket, (struct sockaddr *) &server_sockaddr, sizeof(server_sockaddr)) < 0) {
-		print_errror("Connessione Fallita.\n");
+		print_error("Connessione Fallita.\n");
 		closesocket(my_socket);
 		clearwinsock();
 		return -1;

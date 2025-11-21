@@ -265,6 +265,9 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	// Inizializza il generatore di numeri casuali una sola volta
+	initialize_random_generator();
+
 	// Struttura per memorizzare l'indirizzo del client
 	struct sockaddr_in client_sockaddr;
 	int connection_sock; // Socket per la comunicazione con il singolo client
@@ -306,9 +309,6 @@ int main(int argc, char *argv[])
 		// Strutture per gestire richiesta e risposta
 		weather_request_t parsed_request;
 		weather_response_t prepared_response;
-
-		// Inizializza il generatore di numeri casuali una sola volta
-		initialize_random_generator();
 
 		// Valida e analizza la richiesta ricevuta
 		int validation_result = parse_weather_request(receive_buffer, &parsed_request);
@@ -369,7 +369,7 @@ int main(int argc, char *argv[])
 
 		// Formatta la risposta come stringa da inviare al client
 		char send_buffer[BUFFER_SIZE];
-		format_response_string(&prepared_response, send_buffer, BUFFER_SIZE);
+		format_weather_response(&prepared_response, send_buffer, BUFFER_SIZE);
 
 		// Invia la risposta al client (incluso il null terminator)
 		int message_length  = (int)strlen(send_buffer) + 1;
